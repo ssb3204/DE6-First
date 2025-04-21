@@ -33,9 +33,11 @@
                     <i class="ri-search-line text-lg"></i>
                 </div>
             </div>
-            <form action='#' method='GET'>
+            <form action='{% url "jobs:search_page" %}' method='GET'>
                 <input
                     type="text"
+                    name="q"
+                    value="{{query}}"
                     class="search-input w-full pl-12 pr-32 py-4 border-none bg-gray-50 rounded-lg text-base text-gray-700 focus:ring-2 focus:ring-primary/50 focus:bg-white transition-all duration-300 placeholder-gray-400 shadow-inner"
                     placeholder="원하는 직무나 회사를 검색해보세요 (예: 프론트엔드, 삼성전자)"
                 />
@@ -51,35 +53,30 @@
         
         <div class="mt-8 flex flex-wrap items-center gap-3">
             <span class="text-sm text-gray-500 font-medium">추천 검색어:</span>
-            <a
-                href="#"
-                class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center"
-            >
-                <i class="ri-fire-fill text-orange-500 mr-1"></i> 프론트엔드
+        
+            <a href="/search/?q=Java&filter=description"
+               class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+                <i class="ri-fire-fill text-orange-500 mr-1"></i> Java
             </a>
-            <a
-                href="#"
-                class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center"
-            >
-                <i class="ri-server-line text-blue-500 mr-1"></i> 백엔드
+        
+            <a href="/search/?q=Python&filter=description"
+               class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+                <i class="ri-server-line text-blue-500 mr-1"></i> Python
             </a>
-            <a
-                href="#"
-                class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center"
-            >
-                <i class="ri-database-2-line text-purple-500 mr-1"></i> 데이터 사이언티스트
+        
+            <a href="/search/?q=C%2B%2B&filter=description"
+               class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+                <i class="ri-database-2-line text-purple-500 mr-1"></i> C++
             </a>
-            <a
-                href="#"
-                class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center"
-            >
-                <i class="ri-palette-line text-pink-500 mr-1"></i> UI/UX 디자이너
+        
+            <a href="/search/?q=C%23&filter=description"
+               class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+                <i class="ri-palette-line text-pink-500 mr-1"></i> C#
             </a>
-            <a
-                href="#"
-                class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center"
-            >
-                <i class="ri-megaphone-line text-green-500 mr-1"></i> 마케팅
+        
+            <a href="/search/?q=Ruby&filter=description"
+               class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+                <i class="ri-megaphone-line text-green-500 mr-1"></i> Ruby
             </a>
         </div>
     </div>
