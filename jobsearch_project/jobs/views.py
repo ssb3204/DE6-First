@@ -3,6 +3,12 @@ from django.core.paginator import Paginator
 from .models import JobPosting
 # Create your views here.
 
+from django.shortcuts import render
+
+
+def index(request):
+    return render(request, 'jobs/index.html')
+
 def job_list(request):
     job_list = JobPosting.objects.all().order_by('title')
     paginator = Paginator(job_list, 50)
