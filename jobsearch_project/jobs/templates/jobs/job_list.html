@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>채용 공고 목록</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>전체 채용 공고</h1>
+
+        <ul>
+            {% for job in page_obj %}
+            <li>
+                <a href="{% url 'job_detail' job.pk %}">
+                    <strong>{{ job.title }}</strong> - {{ job.company }}
+                </a>
+            </li>
+        {% empty %}
+            <li>공고가 없습니다.</li>
+        {% endfor %}
+    </ul>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">← 이전</a>
+        {% endif %}
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">다음 →</a>
+        {% endif %}
+    </div>
+    </div>
+</body>
+</html>

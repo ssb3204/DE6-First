@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ job.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ job.title }}</h1>
+        <p><strong>회사:</strong> {{ job.company }}</p>
+        <p><strong>출처:</strong> {{ job.source }}</p>
+        <p><strong>설명:</strong></p>
+        <p>{{ job.description|linebreaks }}</p>
+        <p><a href="{{ job.link }}" target="_blank">🔗 공고 바로가기</a></p>
+        <a href="{% url 'job_list' %}">← 목록으로 돌아가기</a>
+    </div>
+</body>
+</html>
