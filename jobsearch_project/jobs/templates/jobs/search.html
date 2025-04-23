@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -43,6 +44,8 @@
                 {% for job in page_obj %}
                     <li class="border-b border-gray-300 py-2">
                         <strong>{{ job.company }}</strong> - {{ job.title }}
+                        <!-- 링크 추가 -->
+                        <a href="{{ job.link }}" target="_blank" class="text-blue-500 hover:underline ml-2">자세히 보기</a>
                     </li>
                 {% endfor %}
             </ul>

@@ -1,32 +1,14 @@
+
 {% extends 'base.html' %}
+
 {% block content %}
-<script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: { primary: "#4299E1", secondary: "#718096" },
-                borderRadius: {
-                    none: "0px",
-                    sm: "4px",
-                    DEFAULT: "8px",
-                    md: "12px",
-                    lg: "16px",
-                    xl: "20px",
-                    "2xl": "24px",
-                    "3xl": "32px",
-                    full: "9999px",
-                    button: "8px",
-                },
-            },
-        },
-    };
-</script>
 <section class="mt-10">
     <div class="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto border border-gray-100">
         <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">
             원하는 <span class="text-primary">직무</span>와 <span class="text-primary">회사</span>를 찾아보세요
         </h2>
         
+        <!-- 검색 폼 -->
         <div class="relative group">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <div class="w-5 h-5 flex items-center justify-center text-gray-400 group-focus-within:text-primary transition-colors">
@@ -37,13 +19,13 @@
                 <input
                     type="text"
                     name="q"
-                    value="{{query}}"
+                    value="{{ query }}"
                     class="search-input w-full pl-12 pr-32 py-4 border-none bg-gray-50 rounded-lg text-base text-gray-700 focus:ring-2 focus:ring-primary/50 focus:bg-white transition-all duration-300 placeholder-gray-400 shadow-inner"
                     placeholder="원하는 직무나 회사를 검색해보세요 (예: 프론트엔드, 삼성전자)"
                 />
                 <button
                     type='submit'
-                    class="absolute inset-y-0 right-0 px-8 bg-primary text-white font-medium rounded-r-lg whitespace-nowrap hover:opacity-90 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md"
+                    class="absolute inset-y-0 right-0 px-8 bg-blue-500 text-white font-medium rounded-r-lg whitespace-nowrap hover:opacity-90 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md"
                 >
                     검색하기
                     <i class="ri-arrow-right-line ml-2"></i>
@@ -51,36 +33,67 @@
             </form>
         </div>
         
-        <div class="mt-8 flex flex-wrap items-center gap-3">
-            <span class="text-sm text-gray-500 font-medium">추천 검색어:</span>
+        <!-- 경력 사항 체크박스 -->
+        <div class="mt-6">
+            <h3 class="text-lg font-semibold mb-4">경력 사항 필터링</h3>
+            <form action="{% url 'jobs:search_page' %}" method="get" class="space-y-4">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-1">
+                        <input type="checkbox" name="experience" value="junior" {% if 'junior' in selected_experience %}checked{% endif %}>
+                        <label for="junior">신입 (Junior)</label>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <input type="checkbox" name="experience" value="mid" {% if 'mid' in selected_experience %}checked{% endif %}>
+                        <label for="mid">경력 2년 이상 (Mid-Level)</label>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <input type="checkbox" name="experience" value="senior" {% if 'senior' in selected_experience %}checked{% endif %}>
+                        <label for="senior">경력 5년 이상 (Senior)</label>
+                    </div>
+                </div>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">필터링</button>
+            </form>
+        </div>
         
-            <a href="/search/?q=Java&filter=description"
-               class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
-                <i class="ri-fire-fill text-orange-500 mr-1"></i> Java
-            </a>
-        
-            <a href="/search/?q=Python&filter=description"
-               class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
-                <i class="ri-server-line text-blue-500 mr-1"></i> Python
-            </a>
-        
-            <a href="/search/?q=C%2B%2B&filter=description"
-               class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
-                <i class="ri-database-2-line text-purple-500 mr-1"></i> C++
-            </a>
-        
-            <a href="/search/?q=C%23&filter=description"
-               class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
-                <i class="ri-palette-line text-pink-500 mr-1"></i> C#
-            </a>
-        
-            <a href="/search/?q=Ruby&filter=description"
-               class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
-                <i class="ri-megaphone-line text-green-500 mr-1"></i> Ruby
-            </a>
+
+        <!-- 추천 검색어 -->
+    <div class="mt-8 flex flex-wrap items-center gap-3">
+        <span class="text-sm text-gray-500 font-medium">추천 검색어:</span>
+
+        <a href="/search/?q=backend&filter=title"
+            class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+            <i class="ri-fire-fill text-orange-500 mr-1"></i> Backend
+        </a>
+
+        <a href="/search/?q=web&filter=title"
+            class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+            <i class="ri-server-line text-blue-500 mr-1"></i> Web
+        </a>
+
+        <a href="/search/?q=frontend&filter=title"
+            class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+            <i class="ri-database-2-line text-purple-500 mr-1"></i> Frontend
+        </a>
+
+        <a href="/search/?q=app&filter=title"
+            class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+            <i class="ri-palette-line text-pink-500 mr-1"></i> App
+        </a>
+
+        <a href="/search/?q=server&filter=title"
+            class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+            <i class="ri-megaphone-line text-green-500 mr-1"></i> Server
+        </a>
+
+        <a href="/search/?q=data&filter=title"
+            class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+            <i class="ri-fire-fill text-orange-500 mr-1"></i> Data
+        </a>
         </div>
     </div>
 </section>
+
+<!-- 현재 채용 트렌드 키워드 -->
 <section class="mt-10">
     <div class="bg-white rounded-lg shadow-md p-6 max-w-5xl mx-auto border border-gray-100">
         <div class="flex justify-between items-center mb-6">
@@ -89,10 +102,8 @@
                     마지막 업데이트: 2025년 4월 21일
                 </div>
         </div>
-        <div
-            class="aspect-video rounded-lg overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50"
-            id="wordcloud-container"
-        >
+        <div class="aspect-video rounded-lg overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50"
+             id="wordcloud-container">
             <div id="wordcloud" class="w-full h-full"></div>
         </div>
     </div>
