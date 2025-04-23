@@ -1,6 +1,8 @@
 
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
 <section class="mt-10">
     <div class="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto border border-gray-100">
@@ -112,18 +114,53 @@
     </div>
 </section>
 
-<!-- 현재 채용 트렌드 키워드 -->
-<section class="mt-10">
-    <div class="bg-white rounded-lg shadow-md p-6 max-w-5xl mx-auto border border-gray-100">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold">현재 채용 트렌드 키워드</h2>
-                <div class="text-sm text-gray-500">
-                    마지막 업데이트: 2025년 4월 21일
+<section class="py-12 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">가장 많이 언급된 키워드</h2>
+                    </div>
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg overflow-hidden aspect-16/9">
+                        <img 
+                            src="{% static 'jobs/wordcloud.png' %}" 
+                            alt="Word Cloud" 
+                            class="w-full h-full object-contain" 
+                        />
+                    </div>
+                    <div class="mt-4 text-sm text-center">
+                        <span class="text-gray-700">
+                            채용공고에서 가장 많이 언급된 키워드를 시각화한 결과입니다.<br>
+                        </span>
+                        <span class="text-gray-300 font-medium">
+                            (글자 크기가 클수록 해당 키워드가 더 많이 언급되었습니다)
+                        </span>
+                    </div>
                 </div>
-        </div>
-        <div class="aspect-video rounded-lg overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50"
-             id="wordcloud-container">
-            <div id="wordcloud" class="w-full h-full"></div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">
+                            신입/경력 채용 비율 분석
+                        </h2>
+                    </div>
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg overflow-hidden aspect-16/9">
+                        <img 
+                            src="{% static 'jobs/career_ratio.png' %}"
+                            alt="Career Ratio Chart" 
+                            class="w-full h-full object-contain" 
+                        />
+                    </div>
+                    <div class="mt-4 text-sm text-center">
+                        <span class="text-gray-700">
+                            현재 등록된 채용공고의 신입, 경력별 분포를 나타냅니다.<br>
+                        </span>
+                        <span class="text-gray-300 font-medium">
+                            (신입/경력/무관 등의 조건별 비율을 확인할 수 있습니다)
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

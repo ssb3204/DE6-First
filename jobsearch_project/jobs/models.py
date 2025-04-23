@@ -4,7 +4,7 @@ class JobPosting(models.Model):
     company = models.CharField(max_length=100)
     title = models.CharField(max_length=200)
     link = models.URLField()
-    description = models.TextField(null=True, blank=True)
+    description = models.TextField()
     source = models.CharField(max_length=50)
     
     # 경력 수준 필드 추가
@@ -20,5 +20,6 @@ class JobPosting(models.Model):
     )
 
     def __str__(self):
-        return f"{self.title} - {self.company}"
+        return f'{self.company} - {self.title} (출처: {self.source})'
+
 
