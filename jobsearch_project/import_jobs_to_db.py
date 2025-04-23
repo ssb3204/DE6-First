@@ -8,7 +8,10 @@ django.setup()
 
 from jobs.models import JobPosting
 
-csv_path = '/Users/gimhyeonho/Desktop/pythonWorkspace/Dev_project1/DE6-First/jobsearch_project/jobs_postings.csv'
+csv_path = os.environ.get('CSV_PATH')
+
+if not csv_path:
+    raise ValueError("CSV_PATH 환경변수가 설정되지 않았습니다.")
 
 with open(csv_path, newline='', encoding='utf-8') as csvfile:
     reader = csv.DictReader(csvfile)

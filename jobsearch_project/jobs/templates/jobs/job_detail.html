@@ -12,19 +12,23 @@
 
     <!-- 회사명, 출처 -->
     <div class="text-center text-gray-500 text-sm mb-6">
-        <p><strong class="text-gray-700">Company:</strong> {{ job.company }}</p>
-        <p><strong class="text-gray-700">Source:</strong> {{ job.source }}</p>
+        <p><strong class="text-gray-700">🏢 Company:</strong> {{ job.company }}</p>
+        <p><strong class="text-gray-700">🌐 Source:</strong> {{ job.source }}</p>
     </div>
     
     <!-- 설명 -->
+    {% if job.description %}
     <div class="mb-3 ml-2 text-base font-semibold text-primary flex items-center gap-2">
         <span>📌</span>
         <span>description</span>
     </div>
 
+    <!-- description이 default이며 formatted된 설명이 있다면 그걸로 채워짐-->
     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-gray-700 leading-relaxed mb-6 whitespace-pre-line">
-        {{ job.description|linebreaks }}
+        {{ formatted_description|default:job.description }}
+        <div class="mt-15 text-transparent text-sm"></div>
     </div>
+    {% endif %}
 
     <!-- 링크 -->
     <div class="text-center mb-6">
@@ -36,7 +40,7 @@
     
     <!-- 목록으로 -->
     <div class="text-center mb-8">
-        <a href="{% url 'job_list' %}"
+        <a href="{% url 'job_list' %}?page={{ page_number }}"
             class="text-sm text-gray-500 hover:text-primary transition">
             ← 목록으로 돌아가기
         </a>
@@ -45,15 +49,15 @@
     <!-- 이전/다음 링크 -->
     <div class="mt-4 flex justify-between items-center text-base font-medium text-gray-700">
         {% if prev_job %}
-            <a href="{% url 'job_detail' prev_job.pk %}" class="hover:text-primary transition">
+            <a href="{% url 'job_detail' prev_job.pk %}?page={{ page_number }}" 
+            class="hover:text-primary transition">
             ← 이전 공고
             </a>
-            {% else %}
-                <span></span>
             {% endif %}
     
             {% if next_job %}
-                <a href="{% url 'job_detail' next_job.pk %}" class="hover:text-primary transition">
+                <a href="{% url 'job_detail' next_job.pk %}?page={{ page_number }}" 
+                class="hover:text-primary transition">
                 다음 공고 →
             </a>
         {% endif %}
