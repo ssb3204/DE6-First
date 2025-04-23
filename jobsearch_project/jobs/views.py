@@ -68,10 +68,17 @@ def translate_to_korean(keyword):
     return translation_dict.get(keyword, '')
 
 def import_jobs_csv(request):
+    # CSV 파일 경로 설정
     file_path = r"C:\Users\ryanp\OneDrive\바탕 화면\final_result.csv"
+    
+    # 파일이 존재하는지 확인
     if not os.path.exists(file_path):
         return HttpResponse("파일이 존재하지 않습니다.")
 
+    # 기존 데이터 삭제 (초기화)
+    JobPosting.objects.all().delete()
+
+    # CSV 파일을 열고 데이터 읽기
     with open(file_path, newline='', encoding='utf-8-sig') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -81,16 +88,29 @@ def import_jobs_csv(request):
             description = row.get('description', '').strip()
             source = row.get('source', '').strip()
 
+            # 필수 필드가 없으면 건너뜁니다.
             if not company or not title or not link:
                 continue
 
+            # 경력 필터링: description에서 경력 사항에 맞는 값을 추출
+            if '경력 1년' in description or '신입' in description:
+                experience_level = 'junior'
+            elif '경력 2년 이상' in description or '경력 3년 이상' in description:
+                experience_level = 'mid'
+            elif '경력 5년 이상' in description or '경력 6년 이상' in description or '경력 7년 이상' in description:
+                experience_level = 'senior'
+            else:
+                experience_level = 'junior'  # 기본값 설정, 해당하는 경력이 없으면 신입으로 설정
+
+            # 중복된 링크가 있으면 저장하지 않음
             if not JobPosting.objects.filter(link=link).exists():
                 JobPosting.objects.create(
                     company=company,
                     title=title,
                     link=link,
                     description=description,
-                    source=source
+                    source=source,
+                    experience_level=experience_level  # 경력 수준 필드 추가
                 )
 
     return HttpResponse("CSV 파일에서 데이터 가져오기 완료")
