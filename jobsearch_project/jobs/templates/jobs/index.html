@@ -1,90 +1,119 @@
+
 {% extends 'base.html' %}
+
 {% load static %}
+
 {% block content %}
-<script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: { primary: "#4299E1", secondary: "#718096" },
-                borderRadius: {
-                    none: "0px",
-                    sm: "4px",
-                    DEFAULT: "8px",
-                    md: "12px",
-                    lg: "16px",
-                    xl: "20px",
-                    "2xl": "24px",
-                    "3xl": "32px",
-                    full: "9999px",
-                    button: "8px",
-                },
-            },
-        },
-    };
-</script>
 <section class="mt-10">
     <div class="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto border border-gray-100">
         <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">
             원하는 <span class="text-primary">직무</span>와 <span class="text-primary">회사</span>를 찾아보세요
         </h2>
         
+        <!-- 검색 폼 -->
         <div class="relative group">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <div class="w-5 h-5 flex items-center justify-center text-gray-400 group-focus-within:text-primary transition-colors">
-                    <i class="ri-search-line text-lg"></i>
+                    
                 </div>
             </div>
-            <form action='#' method='GET'>
-                <input
-                    type="text"
-                    class="search-input w-full pl-12 pr-32 py-4 border-none bg-gray-50 rounded-lg text-base text-gray-700 focus:ring-2 focus:ring-primary/50 focus:bg-white transition-all duration-300 placeholder-gray-400 shadow-inner"
-                    placeholder="원하는 직무나 회사를 검색해보세요 (예: 프론트엔드, 삼성전자)"
-                />
-                <button
-                    type='submit'
-                    class="absolute inset-y-0 right-0 px-8 bg-primary text-white font-medium rounded-r-lg whitespace-nowrap hover:opacity-90 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md"
-                >
-                    검색하기
-                    <i class="ri-arrow-right-line ml-2"></i>
-                </button>
+            <form action="{% url 'jobs:search_page' %}" method="GET">
+                <!-- 검색어 + 버튼: 가로 정렬 -->
+                <div class="flex items-center bg-gray-50 rounded-lg shadow-inner focus-within:ring-2 focus-within:ring-primary/50">
+                    <!-- 돋보기 아이콘 -->
+                    <div class="pl-4 text-gray-400">
+                        <i class="ri-search-line text-lg"></i>
+                    </div>
+                    <!-- 검색어 입력 -->
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ query }}"
+                        class="w-full pl-4 pr-4 py-4 bg-gray-50 border-none text-base text-gray-700 focus:outline-none focus:bg-white placeholder-gray-400"
+                        placeholder="원하는 직무나 회사를 검색해보세요 (예: 프론트엔드, 삼성전자)"
+                    />
+                    <!-- 검색 버튼 -->
+                    <button
+                        type="submit"
+                        class="px-6 py-3 bg-blue-500 text-white font-medium rounded-r-lg whitespace-nowrap hover:opacity-90 transition-all duration-300 shadow-md"
+                    >
+                        검색하기
+                        <i class="ri-arrow-right-line ml-2"></i>
+                    </button>
+                </div>
+    
+                <!-- 필터 선택 -->
+                <div class="mt-4 flex items-center gap-4">
+                    <select name="filter" class="px-4 py-2 border border-gray-300 rounded-md">
+                        <option value="company" {% if filter_by == "company" %}selected{% endif %}>회사</option>
+                        <option value="title" {% if filter_by == "title" %}selected{% endif %}>직무</option>
+                        <option value="description" {% if filter_by == "description" %}selected{% endif %}>상세정보</option>
+                    </select>
+                </div>
+    
+                <!-- 경력 사항 필터링 -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-4">경력 사항 필터링</h3>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-1">
+                            <input type="checkbox" name="experience" value="junior" {% if 'junior' in selected_experience %}checked{% endif %}>
+                            <label for="junior">신입 (Junior)</label>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <input type="checkbox" name="experience" value="mid" {% if 'mid' in selected_experience %}checked{% endif %}>
+                            <label for="mid">경력 2년 이상 (Mid-Level)</label>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <input type="checkbox" name="experience" value="senior" {% if 'senior' in selected_experience %}checked{% endif %}>
+                            <label for="senior">경력 5년 이상 (Senior)</label>
+                        </div>
+                    </div>
+                </div>
             </form>
+            
         </div>
         
-        <div class="mt-8 flex flex-wrap items-center gap-3">
-            <span class="text-sm text-gray-500 font-medium">추천 검색어:</span>
-            <a
-                href="#"
-                class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center"
-            >
-                <i class="ri-fire-fill text-orange-500 mr-1"></i> 프론트엔드
-            </a>
-            <a
-                href="#"
-                class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center"
-            >
-                <i class="ri-server-line text-blue-500 mr-1"></i> 백엔드
-            </a>
-            <a
-                href="#"
-                class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center"
-            >
-                <i class="ri-database-2-line text-purple-500 mr-1"></i> 데이터 사이언티스트
-            </a>
-            <a
-                href="#"
-                class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center"
-            >
-                <i class="ri-palette-line text-pink-500 mr-1"></i> UI/UX 디자이너
-            </a>
-            <a
-                href="#"
-                class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center"
-            >
-                <i class="ri-megaphone-line text-green-500 mr-1"></i> 마케팅
-            </a>
+        
+        
+        
+
+        <!-- 추천 검색어 -->
+    <div class="mt-8 flex flex-wrap items-center gap-3">
+        <span class="text-sm text-gray-500 font-medium">추천 검색어:</span>
+
+        <a href="/search/?q=backend&filter=title"
+            class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+            <i class="ri-fire-fill text-orange-500 mr-1"></i> Backend
+        </a>
+
+        <a href="/search/?q=web&filter=title"
+            class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+            <i class="ri-server-line text-blue-500 mr-1"></i> Web
+        </a>
+
+        <a href="/search/?q=frontend&filter=title"
+            class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+            <i class="ri-database-2-line text-purple-500 mr-1"></i> Frontend
+        </a>
+
+        <a href="/search/?q=app&filter=title"
+            class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+            <i class="ri-palette-line text-pink-500 mr-1"></i> App
+        </a>
+
+        <a href="/search/?q=server&filter=title"
+            class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+            <i class="ri-megaphone-line text-green-500 mr-1"></i> Server
+        </a>
+
+        <a href="/search/?q=data&filter=title"
+            class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm flex items-center">
+            <i class="ri-fire-fill text-orange-500 mr-1"></i> Data
+        </a>
         </div>
     </div>
 </section>
+
 <section class="py-12 bg-white">
     <div class="container mx-auto px-4">
         <div class="max-w-6xl mx-auto">

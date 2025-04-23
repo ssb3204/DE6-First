@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-10">
+        <h1 class="text-xl font-bold mb-4">검색 결과</h1>
+
+        <!-- 검색 폼 -->
+        <form method="get" class="mb-6">
+            <div class="relative group">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <div class="w-5 h-5 flex items-center justify-center text-gray-400 group-focus-within:text-primary transition-colors">
+                        <i class="ri-search-line text-lg"></i>
+                    </div>
+                </div>
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ query }}"
+                    class="search-input w-full pl-12 pr-32 py-4 border-none bg-gray-50 rounded-lg text-base text-gray-700 focus:ring-2 focus:ring-primary/50 focus:bg-white transition-all duration-300 placeholder-gray-400 shadow-inner"
+                    placeholder="검색어를 입력하세요"
+                />
+                <button
+                    type="submit"
+                    class="absolute inset-y-0 right-0 px-8 bg-blue-500 text-white font-medium rounded-r-lg whitespace-nowrap hover:opacity-90 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md"
+                >
+                    검색
+                    <i class="ri-arrow-right-line ml-2"></i>
+                </button>
+            </div>
+
+            <!-- 필터 + 경력사항 정렬 -->
+            <div class="mt-4 flex flex-wrap items-center gap-4">
+                <!-- 필터 드롭다운 -->
+                <select name="filter" class="px-4 py-2 border border-gray-300 rounded-md">
+                    <option value="company" {% if filter_by == "company" %}selected{% endif %}>회사</option>
+                    <option value="title" {% if filter_by == "title" %}selected{% endif %}>직무</option>
+                    <option value="description" {% if filter_by == "description" %}selected{% endif %}>상세정보</option>
+                </select>
+
+                <!-- 경력사항 체크박스 -->
+                <div class="flex items-center gap-4 flex-wrap">
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="experience" value="junior" {% if 'junior' in selected_experience %}checked{% endif %}>
+                        <span class="text-sm">신입</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="experience" value="mid" {% if 'mid' in selected_experience %}checked{% endif %}>
+                        <span class="text-sm">2년 이상</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="experience" value="senior" {% if 'senior' in selected_experience %}checked{% endif %}>
+                        <span class="text-sm">5년 이상</span>
+                    </label>
+                </div>
+            </div>
+        </form>
+
+        {% if page_obj %}
+            <!-- 결과 리스트 -->
+            <ul class="space-y-4">
+                {% for job in page_obj %}
+                    <li class="border-b border-gray-300 py-2">
+                        <strong>{{ job.company }}</strong> - {{ job.title }}
+                        <a href="{{ job.link }}" target="_blank" class="text-blue-500 hover:underline ml-2">자세히 보기</a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <!-- 페이지네이션 -->
+            <div class="flex justify-center mt-8 flex-wrap gap-2">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}&q={{ query }}&filter={{ filter_by }}" class="px-4 py-2 bg-blue-500 text-white rounded-md">← 이전</a>
+                {% else %}
+                    <span class="px-4 py-2 bg-gray-500 text-white rounded-md">← 이전</span>
+                {% endif %}
+
+                {% for page_num in page_obj.paginator.page_range %}
+                    {% if page_num > page_obj.number|add:-5 and page_num < page_obj.number|add:5 %}
+                        {% if page_num == page_obj.number %}
+                            <span class="px-4 py-2 bg-blue-500 text-white rounded-md">{{ page_num }}</span>
+                        {% else %}
+                            <a href="?page={{ page_num }}&q={{ query }}&filter={{ filter_by }}" class="px-4 py-2 bg-gray-300 text-black rounded-md">{{ page_num }}</a>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}&q={{ query }}&filter={{ filter_by }}" class="px-4 py-2 bg-blue-500 text-white rounded-md">다음 →</a>
+                {% else %}
+                    <span class="px-4 py-2 bg-gray-500 text-white rounded-md">다음 →</span>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>검색 결과가 없습니다.</p>
+        {% endif %}
+    </div>
+{% endblock %}
