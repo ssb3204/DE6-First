@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="mt-10">
+    <div class="max-w-5xl mx-auto p-6 bg-white rounded-xl shadow">
+
+        <!-- 페이지 타이틀 -->
+        <h2 class="text-3xl font-extrabold text-center mb-8 text-primary">
+            <span class="text-red-500 animate-pulse">!</span>
+            <br class="sm:hidden" />
+            <span class="text-gray-800">전체 채용 공고 리스트</span>
+            <span class="text-red-500 animate-pulse">!</span>
+            <br class="sm:hidden" />
+        </h2>
+
+        <!-- 공고 목록 -->
+        <ul class="space-y-4">
+            {% for job in page_obj %}
+                <li class="bg-gray-50 hover:bg-gray-100 rounded-lg p-4 transition-all duration-200 border border-gray-200">
+                    <a href="{% url 'job_detail' job.pk %}?page={{ page_obj.number }}" 
+                        class="text-lg font-semibold text-gray-800 hover:text-primary">
+                        {{ job.title }}
+                    </a>
+                    <div class="text-sm text-gray-500 mt-1">
+                        {{ job.company }}
+                    </div>
+                </li>
+            {% empty %}
+            <li class="text-gray-500 text-center">공고가 없습니다.</li>
+            {% endfor %}
+        </ul>
+
+    <!-- 페이지네이션 -->
+    {% if page_obj.has_other_pages %}
+    <div class="mt-8 flex justify-center items-center space-x-2 text-sm text-gray-600">
+        
+        <!-- 첫 페이지 버튼 -->
+        {% if page_obj.number > 4 %}
+            <a href="?page=1" class="px-3 py-1 border rounded hover:bg-primary hover:text-white">1</a>
+            <span class="px-2">...</span>
+        {% endif %}
+
+        <!-- 현재 페이지 기준 ±3 범위 내 페이지 표시 -->
+        {% for i in page_obj.paginator.page_range %}
+            {% if i >= page_obj.number|add:"-3" and i <= page_obj.number|add:"3" %}
+                {% if i == page_obj.number %}
+                    <span class="px-3 py-1 border rounded font-bold bg-blue-500 text-white shadow">
+                        {{ i }}
+                    </span>
+                {% else %}
+                    <a href="?page={{ i }}" class="px-3 py-1 border rounded hover:bg-primary hover:text-white">{{ i }}</a>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        <!-- 마지막 페이지 버튼 -->
+        {% if page_obj.number < page_obj.paginator.num_pages|add:"-3" %}
+            <span class="px-2">...</span>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="px-3 py-1 border rounded hover:bg-primary hover:text-white">
+                {{ page_obj.paginator.num_pages }}
+            </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
