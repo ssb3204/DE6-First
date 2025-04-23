@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 
 {% block content %}
@@ -29,12 +28,30 @@
                 </button>
             </div>
 
-            <div class="mt-4 flex items-center gap-4">
+            <!-- 필터 + 경력사항 정렬 -->
+            <div class="mt-4 flex flex-wrap items-center gap-4">
+                <!-- 필터 드롭다운 -->
                 <select name="filter" class="px-4 py-2 border border-gray-300 rounded-md">
                     <option value="company" {% if filter_by == "company" %}selected{% endif %}>회사</option>
                     <option value="title" {% if filter_by == "title" %}selected{% endif %}>직무</option>
                     <option value="description" {% if filter_by == "description" %}selected{% endif %}>상세정보</option>
                 </select>
+
+                <!-- 경력사항 체크박스 -->
+                <div class="flex items-center gap-4 flex-wrap">
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="experience" value="junior" {% if 'junior' in selected_experience %}checked{% endif %}>
+                        <span class="text-sm">신입</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="experience" value="mid" {% if 'mid' in selected_experience %}checked{% endif %}>
+                        <span class="text-sm">2년 이상</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="experience" value="senior" {% if 'senior' in selected_experience %}checked{% endif %}>
+                        <span class="text-sm">5년 이상</span>
+                    </label>
+                </div>
             </div>
         </form>
 
@@ -44,14 +61,13 @@
                 {% for job in page_obj %}
                     <li class="border-b border-gray-300 py-2">
                         <strong>{{ job.company }}</strong> - {{ job.title }}
-                        <!-- 링크 추가 -->
                         <a href="{{ job.link }}" target="_blank" class="text-blue-500 hover:underline ml-2">자세히 보기</a>
                     </li>
                 {% endfor %}
             </ul>
 
             <!-- 페이지네이션 -->
-            <div class="flex justify-center mt-8">
+            <div class="flex justify-center mt-8 flex-wrap gap-2">
                 {% if page_obj.has_previous %}
                     <a href="?page={{ page_obj.previous_page_number }}&q={{ query }}&filter={{ filter_by }}" class="px-4 py-2 bg-blue-500 text-white rounded-md">← 이전</a>
                 {% else %}
