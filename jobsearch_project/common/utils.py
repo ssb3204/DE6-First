@@ -1,3 +1,4 @@
+import re
 import platform
 from typing import Dict, List, Optional
 
@@ -6,8 +7,11 @@ from konlpy.tag import Hannanum
 from nltk.tag import pos_tag
 from nltk.tokenize import word_tokenize
 
+from common.constants import position_map
+
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
+
 
 def normalize_phrase(phrase: str) -> Optional[str]:
     """
@@ -19,132 +23,17 @@ def normalize_phrase(phrase: str) -> Optional[str]:
     Returns:
         Optional[str]: 표준화된 키워드 또는 None (매칭되지 않을 경우)
     """
-    position_map = {
-        '백': 'backend',
-        '백엔드': 'backend',
-        '백엔드개발자': 'backend',
-        'backend': 'backend',
-        'back': 'backend',
-        'back-end': 'backend',
-        'node': 'backend',
-        'nodejs': 'backend',
-        'django': 'backend',
-        'flask': 'backend',
-        'fastapi': 'backend',
-        'nest': 'backend',
-        'nestjs': 'backend',
-        'spring': 'backend',
-        'java': 'backend',
-        'golang': 'backend',
-        'go': 'backend',
-        'kotlin': 'backend',
-        'php': 'backend',
-        '.net': 'backend',
-        'ruby': 'backend',
-        'ruby on rails': 'backend',
-        '프론트': 'frontend',
-        '프론트개발자': 'frontend',
-        '프론트엔드': 'frontend',
-        'front': 'frontend',
-        '프론트엔지니어': 'frontend',
-        '프런트엔드': 'frontend',
-        'front-end': 'frontend',
-        'frontend': 'frontend',
-        'react': 'frontend',
-        'react.js': 'frontend',
-        'vue': 'frontend',
-        'vue.js': 'frontend',
-        'angular': 'frontend',
-        'typescript': 'frontend',
-        'html': 'frontend',
-        'css': 'frontend',
-        'javascript': 'frontend',
-        'js': 'frontend',
-        'nextjs': 'frontend',
-        'next': 'frontend',
-        '유니티': 'unity',
-        'unity': 'unity',
-        '유니티개발자': 'unity',
-        '운영': '운영',
-        '매니저': '운영',
-        '데이터': 'Data',
-        'data': 'Data',
-        '빅데이터': 'Data',
-        '관리': '관리',
-        '웹개발자': 'web',
-        '웹개발': 'web',
-        '웹': 'web',
-        'web': 'web',
-        'ai': 'AI',
-        '인공지능': 'AI',
-        '인공': 'AI',
-        '블록체인': 'Blockchain',
-        '블록': 'Blockchain',
-        'blockchain': 'Blockchain',
-        '하드웨어': 'hardware',
-        'hardware': 'hardware',
-        '데브옵스': 'Devops',
-        '브옵스': 'Devops',
-        'devops': 'Devops',
-        'ios': 'App',
-        'android': 'App',
-        '앱개발': 'App',
-        '앱': 'App',
-        '안드로이드': 'App',
-        'flutter': 'App',
-        'reactnative': 'App',
-        'react native': 'App',
-        '스위프트': 'App',
-        'swift': 'App',
-        'kotlin': 'App',
-        'java(android)': 'App',
-        'sre': 'SRE',
-        '컨설턴트': '컨설턴트',
-        '서버개발자': 'Server',
-        '서버개발': 'Server',
-        '서버': 'Server',
-        'server': 'Server',
-        '풀스택': 'fullstack',
-        '풀스택개발자': 'fullstack',
-        '풀스택엔지니어': 'fullstack',
-        'fullstack': 'fullstack',
-        'full-stack': 'fullstack',
-        'pytorch': 'AI',
-        'tensorflow': 'AI',
-        '머신러닝': 'AI',
-        '딥러닝': 'AI',
-        'machine learning': 'AI',
-        'deep learning': 'AI',
-        '데이터사이언티스트': 'Data',
-        '데이터사이언스': 'Data',
-        'data scientist': 'Data',
-        '데이터분석': 'Data',
-        '데이터엔지니어': 'Data',
-        '데이터분석가': 'Data',
-        'ci': 'Devops',
-        'cd': 'Devops',
-        'jenkins': 'Devops',
-        'kubernetes': 'Devops',
-        'docker': 'Devops',
-        '인프라': 'Devops',
-        'monitoring': 'Devops',
-        'full': 'fullstack',
-        'cloud':'cloud',
-        '클라우드':'cloud',
-        'aws':'cloud',
-        'gcp':'cloud',
-        'azure':'cloud',
-        '아마존': 'cloud',
-        '애저': 'cloud',
-        '신입': '주니어',
-        '주니어': '주니어',
-        'junior': '주니어',
-        '경력': '시니어',
-        '시니어': '시니어',
-        'Senior': '시니어',
-        '팀장': '시니어'
-    }
     return position_map.get(phrase, None)
+
+
+def normalize_phrase2(phrase: str) -> str:
+    """
+    위의 표준화 함수와 같은 기능을 하나,
+    해당하는 단어가 dict내에 없을 경우 오리지널 문자열을 내려주는 함수
+    """
+    phrase = phrase.lower()
+    return position_map.get(phrase, phrase)
+
 
 def extract_korean_nouns(text: str) -> List[str]:
     """
@@ -158,6 +47,7 @@ def extract_korean_nouns(text: str) -> List[str]:
     """
     hannanum = Hannanum()
     return hannanum.nouns(text)
+
 
 def extract_english_nouns(text: str) -> List[str]:
     """
@@ -173,6 +63,7 @@ def extract_english_nouns(text: str) -> List[str]:
     tagged: List[tuple] = pos_tag(tokens)
     return [word.lower() for word, tag in tagged if tag.startswith('NN')]
 
+
 def get_system_font_path() -> Optional[str]:
     """
     운영체제별 기본 한글 폰트 경로 반환
@@ -186,3 +77,23 @@ def get_system_font_path() -> Optional[str]:
     elif system == 'Darwin':  # macOS
         return '/System/Library/Fonts/AppleGothic.ttf'
     return None
+
+
+def format_years(strings: List[str]) -> List[str]:
+    """
+    요구 경력의 경우 숫자만 리턴되는 경우가 잦아
+    이미 명사 분류가 끝난 리스트를 받아
+    10이하의 int형에 한해서 '{int}년이상'의 형태로 만들어주는 함수
+    """
+    result = []
+    for s in strings:
+        match = re.search(r'(\d+)', s)
+        if match:
+            num = int(match.group(1))
+            if num > 0 and num <= 10:
+                result.append(f'{num}년이상')
+            else:
+                result.append(s)
+        else:
+            result.append(s)
+    return result
