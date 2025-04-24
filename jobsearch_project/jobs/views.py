@@ -95,19 +95,6 @@ def search_page(request):
         'selected_experience': selected_experience,
     })
 
-
-
-
-def translate_to_korean(keyword):
-    translation_dict = {
-        'Java': '자바',
-        'Python': '파이썬',
-        'C++': 'C++',
-        'C#': 'C#',
-        'Ruby': 'Ruby',
-    }
-    return translation_dict.get(keyword, '')
-
 def import_jobs_csv(request):
     # CSV 파일 경로 설정
     file_path = r"C:\Users\ryanp\OneDrive\바탕 화면\final_result.csv"
